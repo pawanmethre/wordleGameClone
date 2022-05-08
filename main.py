@@ -143,7 +143,7 @@ def guess():
             return {"color": color}
 
 
-app.run(port=5000, debug=True, host="0.0.0.0")
+#sapp.run(port=5000, debug=True, host="0.0.0.0")
 
 '''
 def highestScoreNotify():
