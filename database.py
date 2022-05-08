@@ -3,15 +3,17 @@ import sqlite3
 conn = sqlite3.connect('data.db')
 print("Opened database successfully")
 
+#words table
 conn.execute('''CREATE TABLE WORDS
          (DATE TEXT PRIMARY KEY NOT NULL,
          WORD TEXT NOT NULL);''')
 
+#profile table
 conn.execute('''CREATE TABLE PROFILE
          (EMAIL TEXT PRIMARY KEY NOT NULL,
          NAME TEXT NOT NULL,
          SCORE INT NOT NULL DEFAULT 0);''')
-
+#game stats table
 conn.execute('''CREATE TABLE GAME_STATS
          (EMAIL TEXT  NOT NULL,
          DATE TEXT NOT NULL,
@@ -20,7 +22,10 @@ conn.execute('''CREATE TABLE GAME_STATS
 
 
 
-print("Table created successfully")
+
+#print("Table created successfully")
+
+#populating 5 letter words database with date
 
 conn.execute("INSERT INTO WORDS (DATE, WORD) \
       VALUES ('05/01/22', 'train')")

@@ -6,10 +6,12 @@ import time
 
 app = Flask(__name__)
 #l = ["badge", "badge", "mango", "grove", "stake", "cycle", "frame", "drone", "grape", "train", "table"]
+#list used for finding wether particular alphabet is present on right place
 d= [0, 0, 0, 0, 0]
+#list used for finding the right position of particular alphabet
 pos = [0, 0, 0, 0, 0]
 
-
+#route used for registering for the game using name and email
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -47,10 +49,14 @@ def register():
         }
 
 
+#route for guessing the word
 @app.route('/guess', methods=['POST'])
 def guess():
+    #list used for detecting particular color  according to game rules
     color = ['grey', 'grey', 'grey', 'grey', 'grey']
+    #data recieved from request body
     data = request.get_json()
+    #guess word by the user
     user_word = data['word']
     email = data['email']
     name = data['name']
@@ -64,7 +70,7 @@ def guess():
     cur.execute("SELECT * FROM GAME_STATS WHERE email = ? and date = ?", (email, date))
     rows = cur.fetchall()
     completed = rows[0][3]
-
+    #completed parameter used to detect whether one done with guessing particular word today
     if completed == 1:
         con.close()
         return {
@@ -78,16 +84,19 @@ def guess():
     rows = cur.fetchall()
 
     #actual word from database
+    #actual word to guess from database
     actual_word = rows[0][1]
     #user word from request data
     print("postman word", user_word)
     print("sample string", actual_word)
+    #updating positions and presence of particular alphabet
     for i in range(5):
         if user_word[i] == actual_word[i]:
             d[i] = 1
         else:
             d[i] = 0
             pos[i] = actual_word.find(user_word[i], 0, len(actual_word))
+    #updating color list
     for i in range(5):
         if d[i] == 1:
             color[i] = "green"
@@ -127,6 +136,7 @@ def guess():
         cur.execute(sql_update_query, data)
         con.commit()
         #con.close()
+        #checking wether done with the trails
         if(trails>=6):
             sql_update_query = """Update GAME_STATS set completed = ? where email = ? and date = ?"""
             data = (1, email, date)
